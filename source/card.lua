@@ -7,7 +7,7 @@ function Card:init(x, y, icon)
     self:setImage("images/card.png")
     self.name = "blank"
     self.strengths = {}
-    if icon
+    if icon then
         icon:add()
     end
 end

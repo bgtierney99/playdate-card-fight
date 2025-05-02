@@ -4,12 +4,16 @@ import "CoreLibs/sprites"
 import "CoreLibs/timer"
 import "CoreLibs/crank"
 
+import "GameManager"
 import "SceneManager"
 
 local gfx <const> = playdate.graphics
+GAME_MANAGER = GameManager()
+SCENE_MANAGER = SceneManager()
 
 local function initialize()
-    SceneManager.current_scene:init()
+    -- import scenes to assemble the scene manager list
+    SCENE_MANAGER:init()
 end
 
 initialize()
@@ -18,10 +22,14 @@ initialize()
 function playdate.update()
     --clear the screen after every frame
     gfx.clear()
-    --update function for current game state/scene
-    SceneManager.current_scene:update()
-    --controls for current game state/scene
-    SceneManager.current_scene:controls()
+    if SCENE_MANAGER.current_scene then
+        --update function for current game state/scene
+        SCENE_MANAGER.current_scene:update()
+        --controls for current game state/scene
+        SCENE_MANAGER.current_scene:controls()
+    else
+        print("No current scene loaded!")
+    end
     --update timers
     playdate.timer.updateTimers()
     --update the sprites every frame

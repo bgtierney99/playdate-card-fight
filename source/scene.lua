@@ -9,13 +9,7 @@ backgroundImage:setSize(400, 240)
 function Scene:init()
     gfx.sprite.setBackgroundDrawingCallback(
         function( x, y, width, height )
-            backgroundImage:draw( 0, 0 )
+            self.backgroundImage:draw( 0, 0 )
         end
     )
-end
-
-function Scene:update()
-end
-
-function Scene:controls()
 end
