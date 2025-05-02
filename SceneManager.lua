@@ -1,5 +1,3 @@
---import scenes to add to the list
-
 class('SceneManager').extends()
 
 local gfx <const> = playdate.graphics
