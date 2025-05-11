@@ -12,7 +12,6 @@ GAME_MANAGER = GameManager()
 SCENE_MANAGER = SceneManager()
 
 local function initialize()
-    -- import scenes to assemble the scene manager list
     SCENE_MANAGER:init()
 end
 

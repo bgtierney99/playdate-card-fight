@@ -7,9 +7,10 @@ local backgroundImage = gfx.sprite.new()
 backgroundImage:setSize(400, 240)
 
 function Scene:init()
+    print("Name: ", name)
     gfx.sprite.setBackgroundDrawingCallback(
         function( x, y, width, height )
-            self.backgroundImage:draw( 0, 0 )
+            backgroundImage:draw( 0, 0 )
         end
     )
 end

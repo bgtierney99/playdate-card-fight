@@ -10,8 +10,8 @@ end
 
 function SceneManager:load_scene(next_scene)
     if next_scene then
-        gfx.clear()
         gfx.sprite.removeAll()
+        gfx.clear()
         self:removeAllTimers()
         self.current_scene = next_scene
         self.current_scene:init()

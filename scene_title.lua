@@ -1,24 +1,17 @@
 import "scene_game"
 
 local gfx <const> = playdate.graphics
+local crankTicks = playdate.getCrankTicks(5)
 
 class('TitleScene').extends(Scene)
 
 name = "Title"
 -- backgroundImage = gfx.image.new("images/background")
 backgroundImage = gfx.image.new(400, 240)
-arrow = gfx.image.new("images/arrow")
+local arrow = nil
 local selected_index = 1
 local mode_index = 1
-local player_text, mode_text = gfx.sprite.new(), gfx.sprite.new()
-
-local function change_mode(mode)
-    if mode == 1 then mode_text:remove() elseif mode == 2 then player_text:remove() end
-    -- options_list[mode_index].visuals:remove()
-    mode_index = mode
-    if mode == 1 then player_text:add() elseif mode == 2 then mode_text:add() end
-    -- options_list[mode_index].visuals:add()
-end
+local displayed_text = gfx.sprite.new()
 
 local options_list = {
     {
@@ -31,26 +24,22 @@ local options_list = {
     }
 }
 
-player_text:setSize(400, 240)
-function player_text:draw(x, y)
-    gfx.setClipRect(x, y, 400, 240)
-    for i=1,#options_list[1] do
-        gfx.drawTextAligned(options_list[1][i]["text"], x+200, y+150+(40*(i-1)), kTextAlignment.center) 
+local function change_mode(mode)
+    if mode < 1 then mode = 1 elseif mode > #options_list then mode = #options_list end
+    mode_index = mode
+    function displayed_text:draw(x, y)
+        gfx.setClipRect(x, y, 400, 240)
+        for i=1,#options_list[mode] do
+            gfx.drawTextAligned(options_list[mode][i]["text"], x+200, y+150+(40*(i-1)), kTextAlignment.center) 
+        end
+        gfx.clearClipRect()
     end
-    gfx.clearClipRect()
-end
-
-mode_text:setSize(400, 240)
-function mode_text:draw(x, y)
-    gfx.setClipRect(x, y, 400, 240)
-    for i=1,#options_list[2] do
-        gfx.drawTextAligned(options_list[2][i]["text"], x+200, y+150+(40*(i-1)), kTextAlignment.center) 
-    end
-    gfx.clearClipRect()
+    displayed_text:draw(0, 0)
 end
 
 function TitleScene:init()
     TitleScene.super.init()
+    playdate.restart()
     name = "Title"
     gfx.sprite.setBackgroundDrawingCallback(
         function( x, y, width, height )
@@ -58,32 +47,38 @@ function TitleScene:init()
             gfx.drawTextAligned("Card Fight", 200, 10, kTextAlignment.center)
         end
     )
-    player_text:add()
-    player_text:draw(0, 0)
+    selected_index = 1
+    mode_index = 1
+    local arrow_img = gfx.image.new("images/arrow")
+    arrow = gfx.sprite.new(arrow_img)
+    arrow:add()
+    displayed_text:setSize(400, 240)
+    displayed_text:add()
+    change_mode(1)
 end
 
 function TitleScene:update()
-    -- gfx.setClipRect(x, y, 400, 240)
-    -- gfx.clearClipRect()
+    crankTicks = playdate.getCrankTicks(5)
+    arrow:moveTo(100, 157+(40*(selected_index-1)))
 end
 
 function TitleScene:controls()
-    if playdate.buttonJustPressed(playdate.kButtonUp) then
+    if playdate.buttonJustPressed(playdate.kButtonUp) or (crankTicks == -1) then
         selected_index -= 1
         if selected_index < 1 then selected_index = #options_list end
-        print("Moving up to ", selected_index)
-    elseif playdate.buttonJustPressed(playdate.kButtonDown) then
+    elseif playdate.buttonJustPressed(playdate.kButtonDown) or (crankTicks == 1) then
         selected_index += 1
         if selected_index > #options_list then selected_index = 1 end
-        print("Moving down to ", selected_index)
     end
     if playdate.buttonJustPressed(playdate.kButtonA) then
         options_list[mode_index][selected_index].action()
-        if mode_index < #options_list then mode_index += 1 end
-        change_mode(mode_index)
+        if mode_index < #options_list then
+            change_mode(mode_index+1)
+        end
     end
     if playdate.buttonJustPressed(playdate.kButtonB) then
-        if mode_index > 1 then mode_index -= 1 end
-        change_mode(mode_index-1)
+        if mode_index > 1 then
+            change_mode(mode_index-1)
+        end
     end
 end

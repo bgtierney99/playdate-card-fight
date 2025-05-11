@@ -1,11 +1,10 @@
 import "scene_title"
 
 local gfx <const> = playdate.graphics
--- import "option_button"
 
 class('GameScene').extends(Scene)
 
-name = "Title"
+name = "Game"
 backgroundImage = gfx.image.new("images/background")
 
 function GameScene:init()
@@ -14,14 +13,13 @@ function GameScene:init()
     gfx.sprite.setBackgroundDrawingCallback(
         function( x, y, width, height )
             backgroundImage:draw( 0, 0 )
-            gfx.drawTextAligned("Gamet", 200, 10, kTextAlignment.center)
+            gfx.drawTextAligned("New Game", 200, 10, kTextAlignment.center)
         end
     )
 end
 
 function GameScene:update()
-    -- gfx.setClipRect(x, y, 400, 240)
-    -- gfx.clearClipRect()
+
 end
 
 function GameScene:controls()
