@@ -1,12 +1,11 @@
-local gfx <const> = playdate.graphics
+class('Card').extends(playdate.graphics.sprite)
 
-class('Card').extends(gfx.sprite)
+local name = "blank"
+local strengths = {}
 
 function Card:init(x, y, icon)
     self:moveTo(x, y)
     self:setImage("images/card.png")
-    self.name = "blank"
-    self.strengths = {}
     if icon then
         icon:add()
     end

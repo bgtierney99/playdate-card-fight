@@ -5,15 +5,15 @@ local gfx <const> = playdate.graphics
 class('GameScene').extends(Scene)
 
 name = "Game"
-backgroundImage = gfx.image.new("images/background")
 
 function GameScene:init()
     GameScene.super.init()
     name = "Game"
+    backgroundImage = gfx.image.new("images/background")
     gfx.sprite.setBackgroundDrawingCallback(
         function( x, y, width, height )
             backgroundImage:draw( 0, 0 )
-            gfx.drawTextAligned("New Game", 200, 10, kTextAlignment.center)
+            -- gfx.drawTextAligned("New Game", 200, 10, kTextAlignment.center)
         end
     )
 end
